@@ -1,0 +1,217 @@
+import styles from "./page.module.css";
+
+type PlayerPos = "top" | "left" | "right" | "bottom";
+
+function CardBack({ className = "" }: { className?: string }) {
+  return <div className={`${styles.cardBack} ${className}`} aria-hidden="true" />;
+}
+
+function CardFace({
+  rank,
+  suit,
+  className = "",
+}: {
+  rank: string;
+  suit: "♦" | "♠" | "♥" | "♣";
+  className?: string;
+}) {
+  const isRed = suit === "♦" || suit === "♥";
+  return (
+    <div className={`${styles.cardFace} ${className}`} aria-label={`Carta ${rank}${suit}`}>
+      <div className={`${styles.corner} ${isRed ? styles.red : styles.black}`}>
+        <span className={styles.rank}>{rank}</span>
+        <span className={styles.suit}>{suit}</span>
+      </div>
+
+      <div className={`${styles.centerSuit} ${isRed ? styles.red : styles.black}`}>{suit}</div>
+
+      <div className={`${styles.corner} ${styles.cornerBR} ${isRed ? styles.red : styles.black}`}>
+        <span className={styles.rank}>{rank}</span>
+        <span className={styles.suit}>{suit}</span>
+      </div>
+    </div>
+  );
+}
+
+function Avatar({ pos, name }: { pos: PlayerPos; name: string }) {
+  return (
+    <div className={`${styles.avatarWrap} ${styles[`avatar_${pos}`]}`}>
+      <div className={styles.avatar}>
+        <span className={styles.avatarLetter}>{name.slice(0, 1).toUpperCase()}</span>
+      </div>
+      <div className={styles.mood}>😐</div>
+    </div>
+  );
+}
+
+function Stack({ pos }: { pos: PlayerPos }) {
+  return (
+    <div className={`${styles.stack} ${styles[`stack_${pos}`]}`} aria-label={`Cartas do ${pos}`}>
+      <CardBack className={styles.stackCard1} />
+      <CardBack className={styles.stackCard2} />
+      <CardBack className={styles.stackCard3} />
+    </div>
+  );
+}
+
+export default function GamePage() {
+  return (
+    <main className={styles.table}>
+      {/* Top bar */}
+      <div className={styles.topBar}>
+        <div className={styles.topLeft}>
+          <div className={styles.miniBadge} title="Placar rápido">
+            <div className={styles.miniSquares}>
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.topRight}>
+          <button className={styles.iconBtn} aria-label="Moedas / bônus">
+            <span className={styles.pill}>5 dias</span>
+          </button>
+          <button className={styles.iconBtn} aria-label="Emoji">
+            😊
+          </button>
+          <button className={styles.iconBtn} aria-label="Chat">
+            💬
+          </button>
+          <button className={styles.iconBtn} aria-label="Menu">
+            ☰
+          </button>
+        </div>
+      </div>
+
+      {/* Scoreboard */}
+      <section className={styles.scoreboard} aria-label="Placar">
+        <div className={styles.sbRow}>
+          <span className={styles.sbLabel}>nós</span>
+          <div className={styles.sbDots}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <span key={`n-${i}`} />
+            ))}
+          </div>
+          <span className={styles.sbNum}>0</span>
+        </div>
+
+        <div className={styles.sbRow}>
+          <span className={styles.sbLabel}>eles</span>
+          <div className={styles.sbDots}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <span key={`e-${i}`} />
+            ))}
+          </div>
+          <span className={styles.sbNum}>0</span>
+        </div>
+      </section>
+
+      {/* Manilhas */}
+      <section className={styles.manilhas} aria-label="Manilhas">
+        <div className={styles.manTitle}>MANILHAS</div>
+        <div className={styles.manLine}>
+          <span className={styles.manCard}>
+            3 <span className={styles.red}>♦</span>
+          </span>
+          <span className={styles.manCard}>
+            3 <span className={styles.black}>♠</span>
+          </span>
+          <span className={styles.manCard}>
+            3 <span className={styles.red}>♥</span>
+          </span>
+          <span className={styles.manCard}>
+            3 <span className={styles.black}>♣</span>
+          </span>
+        </div>
+      </section>
+
+      {/* Mesa / Centro */}
+      <section className={styles.board} aria-label="Mesa de jogo">
+        {/* Carta virada no centro (exemplo do print) */}
+        <div className={styles.centerCards}>
+          <CardBack className={styles.centerBack} />
+          <CardFace rank="2" suit="♦" className={styles.centerFace} />
+        </div>
+
+        {/* Jogadores */}
+        <Avatar pos="top" name="Bot" />
+        <Avatar pos="left" name="Bot" />
+        <Avatar pos="right" name="Bot" />
+        <Avatar pos="bottom" name="Você" />
+
+        {/* Pilhas de cartas (3 cartas por jogador) */}
+        <Stack pos="top" />
+        <Stack pos="left" />
+        <Stack pos="right" />
+
+        {/* Emotes painel */}
+        <aside className={styles.emotes} aria-label="Emotes">
+          <button className={styles.emoteBtn} aria-label="Emote 1">😛</button>
+          <button className={styles.emoteBtn} aria-label="Emote 2">😉</button>
+          <button className={styles.emoteBtn} aria-label="Emote 3">😮</button>
+          <button className={styles.emoteBtn} aria-label="Emote 4">😘</button>
+          <div className={styles.emotesToggle} aria-hidden="true">‹</div>
+        </aside>
+
+        {/* Mão do jogador */}
+        <section className={styles.hand} aria-label="Sua mão">
+          <CardFace rank="J" suit="♦" />
+          <CardFace rank="K" suit="♦" />
+          <CardFace rank="4" suit="♥" />
+        </section>
+
+        {/* Botão TRUCO */}
+        <button className={styles.trucoBtn} aria-label="Pedir truco">
+          <span className={styles.trucoHand}>✋</span>
+          <span className={styles.trucoText}>TRUCO</span>
+        </button>
+      </section>
+    </main>
+  );
+}
+{/* Mesa / Centro */}
+<section className={styles.board} aria-label="Mesa de jogo">
+  <div className={styles.playTable}>
+    {/* Carta virada no centro */}
+    <div className={styles.centerCards}>
+      <CardBack className={styles.centerBack} />
+      <CardFace rank="2" suit="♦" className={styles.centerFace} />
+    </div>
+
+    {/* Jogadores */}
+    <Avatar pos="top" name="Bot" />
+    <Avatar pos="left" name="Bot" />
+    <Avatar pos="right" name="Bot" />
+    <Avatar pos="bottom" name="Você" />
+
+    {/* Pilhas */}
+    <Stack pos="top" />
+    <Stack pos="left" />
+    <Stack pos="right" />
+
+    {/* Emotes */}
+    <aside className={styles.emotes} aria-label="Emotes">
+      <button className={styles.emoteBtn} aria-label="Emote 1">😛</button>
+      <button className={styles.emoteBtn} aria-label="Emote 2">😉</button>
+      <button className={styles.emoteBtn} aria-label="Emote 3">😮</button>
+      <button className={styles.emoteBtn} aria-label="Emote 4">😘</button>
+      <div className={styles.emotesToggle} aria-hidden="true">‹</div>
+    </aside>
+
+    {/* Mão */}
+    <section className={styles.hand} aria-label="Sua mão">
+      <CardFace rank="J" suit="♦" />
+      <CardFace rank="K" suit="♦" />
+      <CardFace rank="4" suit="♥" />
+    </section>
+
+    {/* TRUCO */}
+    <button className={styles.trucoBtn} aria-label="Pedir truco">
+      <span className={styles.trucoHand}>✋</span>
+      <span className={styles.trucoText}>TRUCO</span>
+    </button>
+  </div>
+</section>
