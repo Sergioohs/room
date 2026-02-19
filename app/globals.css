@@ -570,6 +570,6 @@ body{
   .trucoBtn{ right: 3%; bottom: 4%; }
 
   /* no mobile, melhor NÃO girar os stacks laterais */
-  .stack_left{ transform: translateY(-50%); }
-  .stack_right{ transform: translateY(-50%); }
+  .stack_left{ transform: translateY(-90%); }
+  .stack_right{ transform: translateY(-90%); }
 }
