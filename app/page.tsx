@@ -87,7 +87,6 @@ export default function GamePage() {
                 <strong className="scoreValue">0</strong>
               </div>
             </div>
-            <strong className="scoreHandValue">3</strong>
           </section>
 
           {/* Atalhos topo direito */}
